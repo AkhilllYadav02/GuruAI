@@ -10,18 +10,27 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Check, X } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { generateQuestions } from "@/lib/gemini";
+
+interface Question {
+  question: string;
+  type: string;
+  options?: string[];
+  correctAnswer: string;
+  explanation: string;
+}
 
 const QuestionGenerator = () => {
   const [topic, setTopic] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [questionType, setQuestionType] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [questions, setQuestions] = useState<any[]>([]);
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<{ [key: number]: string }>({});
   const [showResults, setShowResults] = useState(false);
 
-  const generateQuestions = async () => {
+  const generateQuestionsHandler = async () => {
     if (!topic || !difficulty || !questionType) {
       toast({
         title: "Missing Information",
@@ -35,39 +44,15 @@ const QuestionGenerator = () => {
     console.log("Generating questions for:", { topic, difficulty, questionType });
 
     try {
-      // Simulate AI question generation
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      const mockQuestions = [
-        {
-          question: `What is the primary concept behind ${topic}?`,
-          type: "mcq",
-          options: ["Option A: Basic definition", "Option B: Advanced theory", "Option C: Practical application", "Option D: Historical context"],
-          correctAnswer: "Option A: Basic definition",
-          explanation: "This is the fundamental concept that forms the foundation of understanding."
-        },
-        {
-          question: `Explain the key principles of ${topic} in your own words.`,
-          type: "short",
-          correctAnswer: "A comprehensive explanation covering the main principles and applications.",
-          explanation: "Look for understanding of core concepts and ability to explain in simple terms."
-        },
-        {
-          question: `How does ${topic} apply in real-world scenarios?`,
-          type: "long",
-          correctAnswer: "A detailed analysis of practical applications with examples.",
-          explanation: "This tests deeper understanding and ability to connect theory to practice."
-        }
-      ];
-
-      setQuestions(mockQuestions);
+      const aiQuestions = await generateQuestions(topic, difficulty, questionType, 3);
+      setQuestions(aiQuestions);
       setCurrentQuestionIndex(0);
       setUserAnswers({});
       setShowResults(false);
       
       toast({
         title: "Questions Generated!",
-        description: `Created ${mockQuestions.length} questions for ${topic}.`,
+        description: `Created ${aiQuestions.length} questions for ${topic}.`,
       });
     } catch (error) {
       console.error("Error generating questions:", error);
@@ -105,32 +90,32 @@ const QuestionGenerator = () => {
 
   if (showResults) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <Card className="border-l-4 border-l-green-500">
           <CardHeader>
-            <CardTitle>Quiz Results</CardTitle>
+            <CardTitle className="text-lg sm:text-xl">Quiz Results</CardTitle>
             <CardDescription>Here's how you performed</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {questions.map((question, index) => (
-                <div key={index} className="p-4 border rounded-lg">
+                <div key={index} className="p-3 sm:p-4 border rounded-lg">
                   <div className="flex items-center space-x-2 mb-2">
                     {userAnswers[index] === question.correctAnswer ? (
                       <Check className="w-5 h-5 text-green-600" />
                     ) : (
                       <X className="w-5 h-5 text-red-600" />
                     )}
-                    <span className="font-medium">Question {index + 1}</span>
+                    <span className="font-medium text-sm sm:text-base">Question {index + 1}</span>
                   </div>
-                  <p className="text-gray-700 mb-2">{question.question}</p>
-                  <p className="text-sm text-gray-600 mb-1">
+                  <p className="text-gray-700 mb-2 text-sm sm:text-base break-words">{question.question}</p>
+                  <p className="text-xs sm:text-sm text-gray-600 mb-1 break-words">
                     <strong>Your answer:</strong> {userAnswers[index] || "Not answered"}
                   </p>
-                  <p className="text-sm text-green-600 mb-2">
+                  <p className="text-xs sm:text-sm text-green-600 mb-2 break-words">
                     <strong>Correct answer:</strong> {question.correctAnswer}
                   </p>
-                  <p className="text-sm text-gray-500">{question.explanation}</p>
+                  <p className="text-xs sm:text-sm text-gray-500 break-words">{question.explanation}</p>
                 </div>
               ))}
             </div>
@@ -141,7 +126,7 @@ const QuestionGenerator = () => {
                 setCurrentQuestionIndex(0);
                 setUserAnswers({});
               }}
-              className="mt-6"
+              className="mt-6 w-full sm:w-auto"
             >
               Generate New Questions
             </Button>
@@ -155,25 +140,25 @@ const QuestionGenerator = () => {
     const currentQuestion = questions[currentQuestionIndex];
     
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">
+      <div className="space-y-4 sm:space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <h3 className="text-base sm:text-lg font-semibold">
             Question {currentQuestionIndex + 1} of {questions.length}
           </h3>
-          <Badge variant="outline">{difficulty}</Badge>
+          <Badge variant="outline" className="self-start sm:self-auto">{difficulty}</Badge>
         </div>
         
         <Card>
           <CardHeader>
-            <CardTitle>{currentQuestion.question}</CardTitle>
+            <CardTitle className="text-base sm:text-lg break-words">{currentQuestion.question}</CardTitle>
           </CardHeader>
           <CardContent>
-            {currentQuestion.type === "mcq" ? (
+            {currentQuestion.type === "mcq" || currentQuestion.options ? (
               <RadioGroup onValueChange={(value) => submitAnswer(value)}>
-                {currentQuestion.options.map((option: string, index: number) => (
-                  <div key={index} className="flex items-center space-x-2">
-                    <RadioGroupItem value={option} id={`option-${index}`} />
-                    <Label htmlFor={`option-${index}`} className="cursor-pointer">
+                {currentQuestion.options?.map((option: string, index: number) => (
+                  <div key={index} className="flex items-start space-x-2">
+                    <RadioGroupItem value={option} id={`option-${index}`} className="mt-1" />
+                    <Label htmlFor={`option-${index}`} className="cursor-pointer text-sm sm:text-base break-words leading-relaxed">
                       {option}
                     </Label>
                   </div>
@@ -183,22 +168,17 @@ const QuestionGenerator = () => {
               <div className="space-y-4">
                 <Textarea
                   placeholder="Type your answer here..."
-                  className="min-h-[120px]"
-                  onChange={(e) => {
-                    // Auto-submit after user stops typing for short/long questions
-                    const answer = e.target.value;
-                    if (answer.trim()) {
-                      setTimeout(() => submitAnswer(answer), 1000);
-                    }
-                  }}
+                  className="min-h-[100px] sm:min-h-[120px] text-sm sm:text-base"
+                  id="answer-textarea"
                 />
                 <Button 
                   onClick={() => {
-                    const textarea = document.querySelector('textarea') as HTMLTextAreaElement;
+                    const textarea = document.getElementById('answer-textarea') as HTMLTextAreaElement;
                     if (textarea?.value.trim()) {
                       submitAnswer(textarea.value);
                     }
                   }}
+                  className="w-full sm:w-auto"
                 >
                   Submit Answer
                 </Button>
@@ -211,49 +191,52 @@ const QuestionGenerator = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="grid grid-cols-1 gap-4">
         <div>
           <label className="block text-sm font-medium mb-2">Topic</label>
           <Input
             placeholder="e.g., Physics, Biology, Math"
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
+            className="w-full"
           />
         </div>
-        <div>
-          <label className="block text-sm font-medium mb-2">Difficulty</label>
-          <Select onValueChange={setDifficulty}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select difficulty" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="easy">Easy</SelectItem>
-              <SelectItem value="medium">Medium</SelectItem>
-              <SelectItem value="hard">Hard</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-2">Question Type</label>
-          <Select onValueChange={setQuestionType}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="mcq">Multiple Choice</SelectItem>
-              <SelectItem value="short">Short Answer</SelectItem>
-              <SelectItem value="long">Long Form</SelectItem>
-              <SelectItem value="mixed">Mixed</SelectItem>
-            </SelectContent>
-          </Select>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Difficulty</label>
+            <Select onValueChange={setDifficulty}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select difficulty" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="easy">Easy</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="hard">Hard</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Question Type</label>
+            <Select onValueChange={setQuestionType}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="mcq">Multiple Choice</SelectItem>
+                <SelectItem value="short">Short Answer</SelectItem>
+                <SelectItem value="essay">Essay</SelectItem>
+                <SelectItem value="mixed">Mixed</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
 
       <Button 
-        onClick={generateQuestions}
+        onClick={generateQuestionsHandler}
         disabled={isGenerating}
-        className="w-full bg-gradient-to-r from-green-600 to-blue-600 text-white text-lg py-6"
+        className="w-full bg-gradient-to-r from-green-600 to-blue-600 text-white text-base sm:text-lg py-4 sm:py-6"
       >
         {isGenerating ? (
           <>
