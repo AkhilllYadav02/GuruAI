@@ -1,6 +1,6 @@
-
 import React from "react";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import QueryInput from "@/components/QueryInput";
 import Dashboard from "@/components/Dashboard";
 import QuestionGenerator from "@/components/QuestionGenerator";
@@ -19,11 +19,11 @@ const IndexContent = () => {
   const { savedTopics } = useAppContext();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex flex-col">
       <Header />
       
       {/* Hero Section */}
-      <div className="container mx-auto px-4 py-6 sm:py-8 lg:py-12">
+      <div className="container mx-auto px-4 py-6 sm:py-8 lg:py-12 flex-grow">
         <div className="text-center mb-6 sm:mb-8 lg:mb-12">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3 sm:mb-4">
             EduMentor AI
@@ -210,6 +210,8 @@ const IndexContent = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      <Footer />
     </div>
   );
 };
