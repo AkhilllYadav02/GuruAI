@@ -7,9 +7,12 @@ import QuestionGenerator from "@/components/QuestionGenerator";
 import RecommendedResources from "@/components/RecommendedResources";
 import SavedTopics from "@/components/SavedTopics";
 import HistorySection from "@/components/HistorySection";
+import DoubtSolver from "@/components/DoubtSolver";
+import NotesSummarizer from "@/components/NotesSummarizer";
+import FlashcardSystem from "@/components/FlashcardSystem";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Book, Award, Calendar, Badge, History, Bookmark } from "lucide-react";
+import { Book, Award, Calendar, Badge, History, Bookmark, MessageCircle, FileText, Brain, Map } from "lucide-react";
 import { AppProvider, useAppContext } from "@/contexts/AppContext";
 
 const IndexContent = () => {
@@ -25,7 +28,7 @@ const IndexContent = () => {
           <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3 sm:mb-4">
             EduMentor AI
           </h1>
-          <p className="text-base sm:text-lg lg:text-xl text-gray-600 mb-4 sm:mb-6 lg:mb-8 px-2 sm:px-4">Your Personalized AI Study Companion</p>
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 mb-4 sm:mb-6 lg:mb-8 px-2 sm:px-4">Your Advanced AI Study Companion</p>
           <div className="flex flex-col sm:flex-row justify-center items-center space-y-3 sm:space-y-0 sm:space-x-4 lg:space-x-8 mb-4 sm:mb-6 lg:mb-8">
             <div className="flex items-center space-x-2 text-blue-600">
               <Book className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
@@ -44,8 +47,20 @@ const IndexContent = () => {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="query" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 sm:grid-cols-6 mb-4 sm:mb-6 lg:mb-8 h-auto">
+          <TabsList className="grid w-full grid-cols-4 sm:grid-cols-8 mb-4 sm:mb-6 lg:mb-8 h-auto">
             <TabsTrigger value="query" className="text-xs sm:text-sm py-2 sm:py-3">Ask AI</TabsTrigger>
+            <TabsTrigger value="doubt" className="text-xs sm:text-sm py-2 sm:py-3">
+              <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Doubts</span>
+            </TabsTrigger>
+            <TabsTrigger value="notes" className="text-xs sm:text-sm py-2 sm:py-3">
+              <FileText className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Notes</span>
+            </TabsTrigger>
+            <TabsTrigger value="flashcards" className="text-xs sm:text-sm py-2 sm:py-3">
+              <Brain className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Cards</span>
+            </TabsTrigger>
             <TabsTrigger value="questions" className="text-xs sm:text-sm py-2 sm:py-3">Practice</TabsTrigger>
             <TabsTrigger value="resources" className="text-xs sm:text-sm py-2 sm:py-3">Resources</TabsTrigger>
             <TabsTrigger value="saved" className="text-xs sm:text-sm py-2 sm:py-3">
@@ -56,7 +71,6 @@ const IndexContent = () => {
               <History className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
               <span className="hidden sm:inline">History</span>
             </TabsTrigger>
-            <TabsTrigger value="dashboard" className="text-xs sm:text-sm py-2 sm:py-3">Dashboard</TabsTrigger>
           </TabsList>
 
           <TabsContent value="query" className="space-y-4 sm:space-y-6">
@@ -72,6 +86,57 @@ const IndexContent = () => {
               </CardHeader>
               <CardContent>
                 <QueryInput />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="doubt" className="space-y-4 sm:space-y-6">
+            <Card className="backdrop-blur-sm bg-white/80 border-0 shadow-xl">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2 text-lg sm:text-xl">
+                  <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
+                  <span>AI Doubt Solver</span>
+                </CardTitle>
+                <CardDescription className="text-sm sm:text-base">
+                  Chat with AI for instant doubt clarification and step-by-step solutions
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <DoubtSolver />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="notes" className="space-y-4 sm:space-y-6">
+            <Card className="backdrop-blur-sm bg-white/80 border-0 shadow-xl">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2 text-lg sm:text-xl">
+                  <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
+                  <span>Notes Summarizer</span>
+                </CardTitle>
+                <CardDescription className="text-sm sm:text-base">
+                  Upload or paste notes to get AI-powered summaries and key points
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <NotesSummarizer />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="flashcards" className="space-y-4 sm:space-y-6">
+            <Card className="backdrop-blur-sm bg-white/80 border-0 shadow-xl">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2 text-lg sm:text-xl">
+                  <Brain className="w-5 h-5 sm:w-6 sm:h-6 text-pink-600" />
+                  <span>Flashcard System</span>
+                </CardTitle>
+                <CardDescription className="text-sm sm:text-base">
+                  Generate AI flashcards with spaced repetition for effective memorization
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <FlashcardSystem />
               </CardContent>
             </Card>
           </TabsContent>
@@ -142,10 +207,6 @@ const IndexContent = () => {
                 <HistorySection />
               </CardContent>
             </Card>
-          </TabsContent>
-
-          <TabsContent value="dashboard" className="space-y-4 sm:space-y-6">
-            <Dashboard savedTopics={savedTopics.map(t => t.title)} />
           </TabsContent>
         </Tabs>
       </div>
