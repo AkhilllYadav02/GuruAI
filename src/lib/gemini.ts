@@ -1,3 +1,4 @@
+
 const GEMINI_API_KEY = 'AIzaSyDvc0JRHmJJenpnJ6cig2LBmIn4sWpHpsU';
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
@@ -34,10 +35,15 @@ export async function queryGemini(topic: string): Promise<GeminiResponse> {
   const prompt = `As an educational AI tutor, provide a comprehensive learning response for the topic: "${topic}".
 
 Please respond with a JSON object containing:
-1. explanation: A detailed, educational explanation (300-500 words)
-2. resources: An array of 3-4 learning resources with realistic URLs
+1. explanation: A detailed, educational explanation (300-500 words) in clear, simple language
+2. resources: An array of 4-5 REAL learning resources with actual URLs from reputable sources like:
+   - YouTube educational channels (Khan Academy, Crash Course, 3Blue1Brown, etc.)
+   - Educational websites (Wikipedia, Britannica, MIT OpenCourseWare, etc.)
+   - Interactive platforms (Coursera, edX, Khan Academy, etc.)
 3. difficulty: Assessment of topic difficulty level
 4. estimatedTime: Estimated learning time
+
+Use REAL URLs that exist. For YouTube, use actual educational video URLs. For articles, use real educational websites.
 
 Format as valid JSON only.`;
 
@@ -69,25 +75,37 @@ Format as valid JSON only.`;
       return JSON.parse(jsonMatch[0]);
     }
     
-    // Fallback response
+    // Enhanced fallback response with real URLs
     return {
       explanation: `Here's a comprehensive explanation of ${topic}:\n\n${text}`,
       resources: [
         {
           type: 'video',
-          title: `Understanding ${topic} - Complete Guide`,
-          url: '#',
-          description: 'Comprehensive video explanation with visual examples'
+          title: `${topic} - Khan Academy`,
+          url: `https://www.khanacademy.org/search?page_search_query=${encodeURIComponent(topic)}`,
+          description: 'Comprehensive video lessons with practice exercises'
+        },
+        {
+          type: 'video',
+          title: `${topic} - YouTube Educational`,
+          url: `https://www.youtube.com/results?search_query=${encodeURIComponent(topic + ' tutorial')}`,
+          description: 'Video tutorials and explanations'
         },
         {
           type: 'article',
-          title: `${topic}: Detailed Analysis`,
-          url: '#',
-          description: 'In-depth written explanation with diagrams'
+          title: `${topic} - Wikipedia`,
+          url: `https://en.wikipedia.org/wiki/${encodeURIComponent(topic.replace(/\s+/g, '_'))}`,
+          description: 'Detailed encyclopedia article with references'
+        },
+        {
+          type: 'interactive',
+          title: `${topic} - Coursera`,
+          url: `https://www.coursera.org/search?query=${encodeURIComponent(topic)}`,
+          description: 'Professional courses and certifications'
         }
       ],
       difficulty: 'intermediate',
-      estimatedTime: '15-20 minutes'
+      estimatedTime: '15-30 minutes'
     };
   } catch (error) {
     console.error('Error calling Gemini API:', error);
@@ -147,16 +165,16 @@ Format as valid JSON only.`;
 }
 
 export async function solveDoubt(question: string, context?: string): Promise<string> {
-  const prompt = `As an AI tutor, provide a clear, step-by-step solution for this doubt: "${question}"
+  const prompt = `As an AI tutor, provide a clear, step-by-step solution for this question: "${question}"
   ${context ? `Context: ${context}` : ''}
   
-  Provide:
+  Please provide a well-structured response with:
   1. Direct answer
   2. Step-by-step explanation
   3. Key concepts involved
   4. Tips to remember
   
-  Keep it simple and educational.`;
+  Use simple language and avoid special characters or excessive formatting. Write in a clean, readable format.`;
 
   try {
     const response = await fetch(GEMINI_API_URL, {
@@ -178,7 +196,20 @@ export async function solveDoubt(question: string, context?: string): Promise<st
     }
 
     const data = await response.json();
-    return data.candidates[0].content.parts[0].text;
+    let responseText = data.candidates[0].content.parts[0].text;
+    
+    // Clean up formatting issues
+    responseText = responseText
+      .replace(/\*\*/g, '') // Remove markdown bold
+      .replace(/\*/g, '') // Remove markdown italic
+      .replace(/```/g, '') // Remove code blocks
+      .replace(/#{1,6}\s/g, '') // Remove markdown headers
+      .replace(/\[|\]/g, '') // Remove brackets
+      .replace(/"{2,}/g, '"') // Replace multiple quotes
+      .replace(/\s+/g, ' ') // Replace multiple spaces
+      .trim();
+    
+    return responseText;
   } catch (error) {
     console.error('Error solving doubt:', error);
     throw error;
@@ -196,7 +227,7 @@ Please provide:
 3. Important dates/facts
 4. Quick revision points
 
-Format as a clear, structured summary for ${type}-wise revision.`;
+Format as a clear, structured summary for ${type}-wise revision. Use simple formatting without special characters.`;
 
   try {
     const response = await fetch(GEMINI_API_URL, {
@@ -218,7 +249,17 @@ Format as a clear, structured summary for ${type}-wise revision.`;
     }
 
     const data = await response.json();
-    return data.candidates[0].content.parts[0].text;
+    let responseText = data.candidates[0].content.parts[0].text;
+    
+    // Clean up formatting
+    responseText = responseText
+      .replace(/\*\*/g, '')
+      .replace(/\*/g, '•')
+      .replace(/```/g, '')
+      .replace(/#{1,6}\s/g, '')
+      .trim();
+    
+    return responseText;
   } catch (error) {
     console.error('Error summarizing notes:', error);
     throw error;
@@ -226,11 +267,11 @@ Format as a clear, structured summary for ${type}-wise revision.`;
 }
 
 export async function generateFlashcards(topic: string, count: number = 10): Promise<FlashCard[]> {
-  const prompt = `Generate ${count} flashcards for the topic: "${topic}"
+  const prompt = `Generate ${count} educational flashcards for the topic: "${topic}"
 
 Each flashcard should have:
-- front: A question or term
-- back: The answer or definition
+- front: A clear question or term
+- back: A concise answer or definition
 - difficulty: easy, medium, or hard
 
 Respond with a JSON array of flashcards:
