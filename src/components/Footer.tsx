@@ -41,61 +41,78 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact Information */}
+          {/* Contact Information - Enhanced */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Contact Us</h4>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3">
-                <Phone className="w-4 h-4 text-green-500" />
-                <div>
-                  <p className="text-sm text-gray-300">AI Project Discussion</p>
-                  <a href="tel:+918948890610" className="text-sm font-medium hover:text-blue-400 transition-colors">
-                    +91 89488 90610
-                  </a>
+            <h4 className="text-lg font-semibold mb-4 text-yellow-400">Contact Us</h4>
+            <div className="space-y-4">
+              <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 p-3 rounded-lg border border-blue-500/30">
+                <div className="flex items-center space-x-3">
+                  <Phone className="w-5 h-5 text-green-400 animate-pulse" />
+                  <div>
+                    <p className="text-xs text-gray-300">AI Project Discussion</p>
+                    <a 
+                      href="tel:+918948890610" 
+                      className="text-lg font-bold text-yellow-400 hover:text-yellow-300 transition-colors block"
+                    >
+                      +91 89488 90610
+                    </a>
+                  </div>
                 </div>
               </div>
               
-              <div className="flex items-center space-x-3">
-                <MessageCircle className="w-4 h-4 text-green-500" />
-                <div>
-                  <p className="text-sm text-gray-300">WhatsApp</p>
-                  <a 
-                    href="https://wa.me/918948890610" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-sm font-medium hover:text-blue-400 transition-colors"
-                  >
-                    +91 89488 90610
-                  </a>
+              <div className="bg-gradient-to-r from-green-600/20 to-emerald-600/20 p-3 rounded-lg border border-green-500/30">
+                <div className="flex items-center space-x-3">
+                  <MessageCircle className="w-5 h-5 text-green-400 animate-bounce" />
+                  <div>
+                    <p className="text-xs text-gray-300">WhatsApp</p>
+                    <a 
+                      href="https://wa.me/918948890610" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-lg font-bold text-green-400 hover:text-green-300 transition-colors block"
+                    >
+                      +91 89488 90610
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Contact Action Buttons */}
+        {/* Contact Action Buttons - Enhanced */}
         <div className="border-t border-gray-700 pt-6 mb-6">
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button 
               asChild
-              className="bg-green-600 hover:bg-green-700 text-white flex items-center space-x-2"
+              className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white flex items-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base px-6 py-3"
             >
               <a href="https://wa.me/918948890610" target="_blank" rel="noopener noreferrer">
-                <MessageCircle className="w-4 h-4" />
-                <span>WhatsApp Us</span>
+                <MessageCircle className="w-5 h-5" />
+                <span>WhatsApp Us Now</span>
               </a>
             </Button>
             
             <Button 
               asChild
               variant="outline" 
-              className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white flex items-center space-x-2"
+              className="border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-gray-900 flex items-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base px-6 py-3"
             >
               <a href="tel:+918948890610">
-                <Phone className="w-4 h-4" />
+                <Phone className="w-5 h-5" />
                 <span>Call Now</span>
               </a>
             </Button>
+          </div>
+          
+          {/* Additional highlight banner */}
+          <div className="mt-4 text-center">
+            <div className="inline-block bg-gradient-to-r from-yellow-400/20 to-orange-400/20 px-4 py-2 rounded-full border border-yellow-400/50">
+              <p className="text-sm text-yellow-300">
+                <span className="animate-pulse">📞</span> Need AI Development? Call us at 
+                <span className="font-bold text-yellow-400 ml-1">+91 89488 90610</span>
+              </p>
+            </div>
           </div>
         </div>
 
