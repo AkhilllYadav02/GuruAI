@@ -1,73 +1,79 @@
-# Welcome to your Lovable project
+# 🎓 EduMentor AI – Powered by Mindexa
 
-## Project info
+EduMentor AI is an intelligent and interactive learning platform powered by Large Language Models (LLMs) that helps students **learn**, **revise**, and **test** themselves smarter. Designed and developed by **Mindexa**, this project combines the power of AI with modern UI/UX to make learning more personalized and effective.
 
-**URL**: https://lovable.dev/projects/6f9413ce-51c9-4d3d-b360-690c5f7b9b36
+---
 
-## How can I edit this code?
+## 🚀 Features
 
-There are several ways of editing your application.
+### 📚 Smart Query Assistant
+- Ask any topic → Get instant articles, videos, notes, and key points
+- Semantic search with contextual answers
 
-**Use Lovable**
+### 📌 Pin & Save for Later
+- Save important queries and resources
+- Personalized study feed
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/6f9413ce-51c9-4d3d-b360-690c5f7b9b36) and start prompting.
+### 🧠 AI-Powered Question Generator
+- Generate questions in formats: MCQ, objective, subjective
+- Choose difficulty: Easy, Medium, Advanced
 
-Changes made via Lovable will be committed automatically to this repo.
+### 📝 Mock Test Engine
+- Create custom tests from pinned topics
+- Instant scoring with answer explanations
+- Analytics for accuracy, time spent, and improvement tips
 
-**Use your preferred IDE**
+### 💡 Concept Maps & Flashcards
+- Auto-generated mind maps for better understanding
+- Flashcards with spaced repetition support
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 🎧 Audio Tutor & Simplified Learning
+- Voice-based explanations for auditory learners
+- Re-explain in simpler terms or regional languages
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 📈 Performance Dashboard
+- Study streaks, saved topics, and test progress
+- Weekly & monthly reports
 
-Follow these steps:
+### 🔒 Authentication & User Management
+- Secure sign-in via Clerk
+- Separate dashboards for students, parents, and teachers
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+---
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 🛠️ Tech Stack
 
-# Step 3: Install the necessary dependencies.
-npm i
+| Layer        | Technology                                     |
+|--------------|------------------------------------------------|
+| Frontend     | React.js, Tailwind CSS                         |
+| Backend      | Node.js, Express.js                            |
+| Database     | MongoDB                                        |
+| Authentication | Clerk                                        |
+| AI & LLMs    | OpenAI GPT-4 API, LangChain                    |
+| Search       | Vector DB (Pinecone) / ElasticSearch (optional)|
+| Hosting      | Vercel (Frontend), Render / AWS (Backend)      |
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+---
 
-**Edit a file directly in GitHub**
+## 📱 Screenshots & Demo
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Coming Soon...
 
-**Use GitHub Codespaces**
+---
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 👥 Target Users
 
-## What technologies are used for this project?
+- Students (Class 9–12, NEET, JEE, College)
+- Teachers & Tutors
+- EdTech startups
+- Test prep platforms
 
-This project is built with:
+---
+📞 Contact Us
+Made with ❤️ by Mindexa
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+📱 Phone: +91 89488 90610
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/6f9413ce-51c9-4d3d-b360-690c5f7b9b36) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+💼 Want a Custom Solution?
+Whether you're a startup or an institution, we can help you build intelligent learning platforms tailored to your needs.
+👉 Reach out and let’s collaborate!
