@@ -5,12 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, BookOpen, Youtube, FileText, Mic, MicOff } from "lucide-react";
+import { Loader2, BookOpen, Mic, MicOff, Save } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { queryGemini, GeminiResponse } from "@/lib/gemini";
+import { useAppContext } from "@/contexts/AppContext";
+import RecommendedResources from "./RecommendedResources";
 
 interface QueryInputProps {
-  onSaveTopic: (topic: string) => void;
+  onSaveTopic?: (topic: string) => void;
 }
 
 const QueryInput = ({ onSaveTopic }: QueryInputProps) => {
@@ -18,6 +20,7 @@ const QueryInput = ({ onSaveTopic }: QueryInputProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<GeminiResponse | null>(null);
   const [isListening, setIsListening] = useState(false);
+  const { addToHistory, saveTopic } = useAppContext();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,6 +32,13 @@ const QueryInput = ({ onSaveTopic }: QueryInputProps) => {
     try {
       const aiResponse = await queryGemini(query);
       setResponse(aiResponse);
+      
+      // Add to history
+      addToHistory({
+        query,
+        response: aiResponse,
+        type: 'query'
+      });
       
       toast({
         title: "Query Complete!",
@@ -47,11 +57,23 @@ const QueryInput = ({ onSaveTopic }: QueryInputProps) => {
   };
 
   const handleSave = () => {
-    onSaveTopic(query);
-    toast({
-      title: "Topic Saved!",
-      description: "This topic has been added to your saved list.",
-    });
+    if (response) {
+      saveTopic({
+        title: query,
+        query,
+        response
+      });
+      
+      // Legacy callback support
+      if (onSaveTopic) {
+        onSaveTopic(query);
+      }
+      
+      toast({
+        title: "Topic Saved!",
+        description: "This topic has been added to your saved list.",
+      });
+    }
   };
 
   const startVoiceRecognition = () => {
@@ -167,37 +189,20 @@ const QueryInput = ({ onSaveTopic }: QueryInputProps) => {
                 variant="outline" 
                 className="mt-4 w-full sm:w-auto"
               >
+                <Save className="w-4 h-4 mr-2" />
                 Save Topic
               </Button>
             </CardContent>
           </Card>
 
+          {/* Enhanced Recommended Resources */}
           <Card>
             <CardHeader>
               <CardTitle className="text-lg sm:text-xl">Recommended Resources</CardTitle>
               <CardDescription>Curated learning materials for this topic</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {response.resources.map((resource, index) => (
-                  <div key={index} className="flex flex-col sm:flex-row sm:items-start space-y-3 sm:space-y-0 sm:space-x-4 p-4 border rounded-lg hover:bg-gray-50 transition-colors">
-                    <div className="p-2 bg-blue-100 rounded-lg self-start">
-                      {resource.type === "video" ? (
-                        <Youtube className="w-5 h-5 text-blue-600" />
-                      ) : (
-                        <FileText className="w-5 h-5 text-blue-600" />
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-gray-900 text-sm sm:text-base break-words">{resource.title}</h4>
-                      <p className="text-xs sm:text-sm text-gray-600 mt-1 break-words">{resource.description}</p>
-                      <Button variant="link" className="p-0 h-auto mt-2 text-blue-600 text-xs sm:text-sm">
-                        Open Resource →
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <RecommendedResources topic={query} />
             </CardContent>
           </Card>
         </div>
